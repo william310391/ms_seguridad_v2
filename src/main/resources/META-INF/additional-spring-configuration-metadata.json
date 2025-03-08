@@ -1,0 +1,107 @@
+{"properties": [
+  {
+    "name": "dev.hibernate.hbm2ddl.auto",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.hibernate.hbm2ddl.auto'"
+  },
+  {
+    "name": "dev.datasource.username",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.username'"
+  },
+  {
+    "name": "dev.datasource.password",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.password'"
+  },
+  {
+    "name": "dev.datasource.databaseName",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.databaseName'"
+  },
+  {
+    "name": "dev.datasource.host",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.host'"
+  },
+  {
+    "name": "dev.datasource.port",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.port'"
+  },
+  {
+    "name": "dev.datasource.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.jdbc-url'"
+  },
+  {
+    "name": "dev.datasource.url",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.url'"
+  },
+  {
+    "name": "dev.datasource.driverClassName",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.driverClassName'"
+  },
+  {
+    "name": "dev.datasource.testWhileIdle",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.testWhileIdle'"
+  },
+  {
+    "name": "dev.datasource.timeBetweenEvictionRunsMillis",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.timeBetweenEvictionRunsMillis'"
+  },
+  {
+    "name": "dev.datasource.validationQuery",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.validationQuery'"
+  },
+  {
+    "name": "dev.datasource.initialSize",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.initialSize'"
+  },
+  {
+    "name": "dev.datasource.minIdle",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.minIdle'"
+  },
+  {
+    "name": "dev.datasource.maxActive",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.maxActive'"
+  },
+  {
+    "name": "dev.datasource.maxIdle",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.maxIdle'"
+  },
+  {
+    "name": "dev.datasource.maximumPoolSize",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.maximumPoolSize'"
+  },
+  {
+    "name": "dev.datasource.idleTimeout",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.idleTimeout'"
+  },
+  {
+    "name": "dev.datasource.minimumIdle",
+    "type": "java.lang.String",
+    "description": "A description for 'dev.datasource.minimumIdle'"
+  },
+  {
+    "name": "security.jwt.key.private",
+    "type": "java.lang.String",
+    "description": "A description for 'security.jwt.key.private'"
+  },
+  {
+    "name": "security.user.generator",
+    "type": "java.lang.String",
+    "description": "A description for 'security.user.generator'"
+  }
+]}
