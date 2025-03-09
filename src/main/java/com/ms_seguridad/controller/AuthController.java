@@ -1,5 +1,8 @@
 package com.ms_seguridad.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.security.authentication.BadCredentialsException;
 // import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +13,9 @@ package com.ms_seguridad.controller;
 import org.springframework.web.bind.annotation.*;
 // import org.springframework.security.core.Authentication;
 
+import com.ms_seguridad.model.request.AuthLoginRequest;
+import com.ms_seguridad.service.MyReactiveUserDetailsService;
+
 // import com.ms_seguridad.model.request.AuthRequest;
 // import com.ms_seguridad.util.JwtUtil;
 
@@ -19,45 +25,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-//     @Autowired
-//     private JwtUtil jwtUtil;
-//     @Autowired
-//     private UserDetailsService userDetailsService;
-
-//     @Autowired
-//     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MyReactiveUserDetailsService userDetailService;
 
 
-//     // public AuthController(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
-//     //     this.jwtUtil = jwtUtil;
-//     //     this.userDetailsService = userDetailsService;
-//     // }
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> login(@RequestBody AuthLoginRequest userRequest) {
+        return new ResponseEntity<>(userDetailService.login(userRequest), HttpStatus.OK);
+    }
 
-//     @PostMapping("/login")
-//     public Mono<String> login(@RequestBody AuthRequest request) {
-//         return userDetailsService.loadUserByUsername(request.getUsername())
-//                 .map(userDetails -> {
-//                     if ("password".equals(request.getPassword())) { // Aquí deberías usar BCryptPasswordEncoder
-//                         Authentication authentication = authentication(AuthRequest.username(), AuthRequest.password());
-//                         return jwtUtil.createToken(authentication);
-//                     }
-//                     throw new RuntimeException("Credenciales incorrectas");
-//                 });
-//     }
-
-//             public Authentication authentication(String username, String password) {
-//                 UserDetails userDetails = this.loadUserByUsername(username);
-
-//                 if (userDetails == null) {
-//                         throw new BadCredentialsException("Invalid username or password");
-//                 }
-
-//                 if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-//                         throw new BadCredentialsException("Invalid password");
-//                 }
-
-//                 return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
-//         }
 }
 
 

@@ -10,7 +10,7 @@ public record UsersEntity(
     String username,
     String password,
     @Column("is_enabled") Boolean isEnabled,
-    @Column("account_no_expired") Boolean accountNoExpired,
-    @Column("account_no_Locked") Boolean accountNoLocked,
-    @Column("creadential_No_Expired") Boolean credentialNoExpired
+    @Column("account_no_expired") Boolean isAccountNoExpired,
+    @Column("account_no_Locked") Boolean isAccountNoLocked,
+    @Column("creadential_No_Expired") Boolean isCredentialNoExpired
 ) {}
