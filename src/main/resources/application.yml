@@ -33,10 +33,3 @@ security:
             private: ad434ed313bc0f7e45d15d06b352c4a3f9a972e96502a578b1ecadc023ac8902
         user:
             generator: AUTHOJWT-BACKEND
-
-# security:
-#   jwt:
-#     key:
-#       private: ad434ed313bc0f7e45d15d06b352c4a3f9a972e96502a578b1ecadc023ac8902
-#     user:
-#       generator: AUTHOJWT-BACKEND

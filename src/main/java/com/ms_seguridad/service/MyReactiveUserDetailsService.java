@@ -1,7 +1,6 @@
 package com.ms_seguridad.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +25,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MyReactiveUserDetailsService implements ReactiveUserDetailsService {
@@ -42,47 +40,59 @@ public class MyReactiveUserDetailsService implements ReactiveUserDetailsService 
     @Autowired
     private PermissionsRepository permissionsRepository;
 
+    
     @Override
     public Mono<UserDetails> findByUsername(String username) {
+        System.out.println("Buscando usuario: " + username);
+    
         return usersRepository.findUserByUserName(username)
-                .flatMap(user -> rolesRepository.findRoleByIdUser(user.id()) // Devuelve Flux<RolesEntity>
-                        .collectList() // Convertimos Flux a Mono<List<RolesEntity>>
-                        .flatMap(roleList -> {
-                            // Extraemos los IDs de los roles
-                            List<Integer> roleIds = roleList.stream()
-                                    .map(RolesEntity::id) // Extraemos solo los IDs de los roles
-                                    .collect(Collectors.toList());
-
-                            if (roleIds.isEmpty()) {
-                                return Mono.empty();
-                            }
-
-                            return permissionsRepository.findPermissionByIdRole(roleIds) // Pasamos List<Integer>
-                                    .collectList() // Convertimos Flux a Mono<List<PermissionEntity>>
-                                    .map(permissionList -> { // Convertimos permisos en UserDetails
-
-                                        List<SimpleGrantedAuthority> authoryList = new ArrayList<>();
-
-                                        roleList.stream().forEach(role -> {
-                                            authoryList
-                                                    .add(new SimpleGrantedAuthority("ROLE_".concat(role.role_name())));
-                                        });
-
-                                        permissionList.stream().forEach(permission -> {
-                                            authoryList.add(new SimpleGrantedAuthority(permission.name()));
-                                        });
-
-                                        return User.withUsername(user.username())
-                                                .password(user.password()) 
-                                                .disabled(!Boolean.TRUE.equals(user.isEnabled())) 
-                                                .accountExpired(!Boolean.TRUE.equals(user.isAccountNoExpired())) 
-                                                .credentialsExpired(!Boolean.TRUE.equals(user.isCredentialNoExpired())) 
-                                                .accountLocked(!Boolean.TRUE.equals(user.isAccountNoLocked())) 
-                                                .authorities(authoryList)
-                                                .build();
-                                    });
-                        }))
-                .switchIfEmpty(Mono.empty()); // Retorna vacío si el usuario no existe
+            .doOnNext(user -> System.out.println("Usuario encontrado: " + user))
+            .switchIfEmpty(Mono.defer(() -> {
+                System.out.println("Usuario no encontrado: " + username);
+                return Mono.empty();
+            }))
+            .flatMap(user -> rolesRepository.findRoleByIdUser(user.id())
+                .doOnNext(role -> System.out.println("Rol encontrado: " + role))
+                .doOnError(error -> System.err.println("Error al obtener roles: " + error.getMessage()))
+                .collectList()
+                .flatMap(roleList -> {
+                    if (roleList.isEmpty()) {
+                        System.out.println("El usuario " + username + " no tiene roles asignados");
+                        return Mono.empty();
+                    }
+    
+                    List<Integer> roleIds = roleList.stream().map(RolesEntity::id).toList();
+    
+                    return permissionsRepository.findPermissionByIdRole(roleIds)
+                        .doOnNext(permission -> System.out.println("Permiso encontrado: " + permission))
+                        .doOnError(error -> System.err.println("Error al obtener permisos: " + error.getMessage()))
+                        .collectList()
+                        .map(permissionList -> {
+                            List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+    
+                            roleList.forEach(role ->
+                                authorityList.add(new SimpleGrantedAuthority("ROLE_" + role.role_name()))
+                            );
+    
+                            permissionList.forEach(permission ->
+                                authorityList.add(new SimpleGrantedAuthority(permission.name()))
+                            );
+    
+                            System.out.println("Usuario " + username + " tiene " + roleList.size() + " roles y " + permissionList.size() + " permisos");
+    
+                            return User.withUsername(user.username())
+                                    .password(user.password())
+                                    .disabled(!Boolean.TRUE.equals(user.isEnabled()))
+                                    .accountExpired(!Boolean.TRUE.equals(user.isAccountNoExpired()))
+                                    .credentialsExpired(!Boolean.TRUE.equals(user.isCredentialNoExpired()))
+                                    .accountLocked(!Boolean.TRUE.equals(user.isAccountNoLocked()))
+                                    .authorities(authorityList)
+                                    .build();
+                        });
+                })
+            )
+            .doOnError(error -> System.err.println("Error general en findByUsername: " + error.getMessage()))
+            .switchIfEmpty(Mono.empty());
     }
 
     public Mono<AuthResponse> login(AuthLoginRequest authLoginRequest) {
@@ -99,9 +109,8 @@ public class MyReactiveUserDetailsService implements ReactiveUserDetailsService 
 
     public Mono<Authentication> authentication(String username, String password) {
         return this.findByUsername(username)
-                .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid username or password"))) // Si el usuario
-                                                                                                        // no existe,
-                                                                                                        // lanza error
+                .doOnError(error -> System.err.println("Error al buscar usuario: " + error.getMessage())) // Log error en findByUsername
+                .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid username or password"))) 
                 .flatMap(userDetails -> {
                     if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                         return Mono.error(new BadCredentialsException("Invalid password"));
