@@ -13,6 +13,9 @@ public class Queries {
                     inner join roles r on r.id= ur.role_id
                     where user_id= :user_id;
                 """;
+        public static final String GET_ROLE_BY_NAME = """
+                    SELECT * FROM roles where role_name in (:role_name);
+                """;
     }
 
     public class PERMISSION {

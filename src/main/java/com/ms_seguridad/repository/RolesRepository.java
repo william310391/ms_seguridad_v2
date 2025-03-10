@@ -1,5 +1,7 @@
 package com.ms_seguridad.repository;
 
+import java.util.List;
+
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -13,4 +15,7 @@ import reactor.core.publisher.Flux;
 public interface RolesRepository extends ReactiveCrudRepository<RolesEntity, Integer>  {
     @Query(Queries.ROLE.GET_ROLE_BY_IDUSER)
     Flux<RolesEntity> findRoleByIdUser(@Param("user_id") Integer idUser);
+
+    @Query(Queries.ROLE.GET_ROLE_BY_NAME)
+    Flux<RolesEntity> findRoleByRoleName(@Param("role_name") List<String> rolesName);
 }

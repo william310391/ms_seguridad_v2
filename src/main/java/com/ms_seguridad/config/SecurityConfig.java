@@ -12,7 +12,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
 import com.ms_seguridad.config.filter.JwtFilter;
-import com.ms_seguridad.service.MyReactiveUserDetailsService;
+import com.ms_seguridad.service.Impl.ReactiveUserDetailsServiceImpl;
 
 import reactor.core.publisher.Mono;
 
@@ -44,7 +44,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public ReactiveAuthenticationManager reactiveAuthenticationManager(MyReactiveUserDetailsService userDetailsService) {
+    public ReactiveAuthenticationManager reactiveAuthenticationManager(ReactiveUserDetailsServiceImpl userDetailsService) {
         UserDetailsRepositoryReactiveAuthenticationManager authenticationManager =
                 new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
         authenticationManager.setPasswordEncoder(passwordEncoder()); // Aquí se inyecta el encoder

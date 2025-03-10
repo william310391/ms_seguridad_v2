@@ -1,9 +1,9 @@
 package com.ms_seguridad.model.request;
 
+import jakarta.validation.constraints.NotBlank;
 
-
-public record AuthLoginRequest(String username
-                              ,String password) {
+public record AuthLoginRequest(@NotBlank String username
+                              ,@NotBlank String password) {
 
     
 }

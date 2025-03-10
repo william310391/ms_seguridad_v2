@@ -4,9 +4,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 @Table("user_roles")
-public record UserRolesEntity(
-  @Id Integer id,
-  @Column("role_id") Integer idRole,
-  @Column("user_id") Integer idUser
-) {}
+public class UserRolesEntity {
+  @Id
+  private Integer id;
+  @Column("role_id")
+  private Integer idRole;
+  @Column("user_id")
+  private Integer idUser;
+}

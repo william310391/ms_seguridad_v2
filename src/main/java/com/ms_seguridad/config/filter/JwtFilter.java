@@ -18,15 +18,14 @@ import org.springframework.web.server.WebFilterChain;
 import org.springframework.http.HttpStatus;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.ms_seguridad.service.MyReactiveUserDetailsService;
-
+import com.ms_seguridad.service.Impl.ReactiveUserDetailsServiceImpl;
 
 import reactor.core.publisher.Mono;
 
 public class JwtFilter implements WebFilter {
 
     @Autowired
-    private MyReactiveUserDetailsService userDetailsService;
+    private ReactiveUserDetailsServiceImpl userDetailsService;
     private final ServerSecurityContextRepository securityContextRepository = new WebSessionServerSecurityContextRepository();
     
 
@@ -41,7 +40,7 @@ public class JwtFilter implements WebFilter {
                 DecodedJWT decodedJWT = userDetailsService.validateToken(token);
     
                 return userDetailsService.extractUsername(decodedJWT)
-                        .flatMap(userDetailsService::findByUsername)
+                        .flatMap(userDetailsService::findByUsername)  //revisar esto puede generar doble validadcion
                         .flatMap(userDetails -> {
                             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                     userDetails.getUsername(),
