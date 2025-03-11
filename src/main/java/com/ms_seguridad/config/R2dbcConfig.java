@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
+import org.springframework.lang.NonNull;
 
 import io.r2dbc.pool.ConnectionPool;
 import io.r2dbc.pool.ConnectionPoolConfiguration;
@@ -46,7 +47,7 @@ public class R2dbcConfig  extends AbstractR2dbcConfiguration {
     private int minIdle;
     @Override
     @Bean
-    public ConnectionFactory connectionFactory() {
+    public @NonNull ConnectionFactory connectionFactory() {
         ConnectionFactory connectionFactory = new PoolingConnectionFactoryProvider().create(
                 ConnectionFactoryOptions.builder()
                         .option(ConnectionFactoryOptions.PROTOCOL, "mysql")

@@ -2,6 +2,7 @@ package com.ms_seguridad.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
@@ -34,8 +35,8 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance()) 
                 .authorizeExchange(auth -> {
-                    auth.pathMatchers("/auth/**").permitAll();
-                    auth.pathMatchers("/prueba/data").hasRole("ADMIN"); //Authority("ADMIN"); // Solo ADMIN puede acceder
+                    auth.pathMatchers(HttpMethod.POST,"/auth/login").permitAll();
+                    auth.pathMatchers(HttpMethod.POST,"/auth/register").hasRole("ADMIN"); //Authority("ADMIN"); // Solo ADMIN puede acceder
                     auth.anyExchange().authenticated(); // Requiere autenticación para cualquier otra ruta
                 })
                 .authenticationManager(authentication -> Mono.empty()) // Desactiva autenticación predeterminada
