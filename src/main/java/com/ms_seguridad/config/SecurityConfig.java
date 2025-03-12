@@ -15,8 +15,6 @@ import org.springframework.security.web.server.context.NoOpServerSecurityContext
 import com.ms_seguridad.config.filter.JwtFilter;
 import com.ms_seguridad.service.Impl.ReactiveUserDetailsServiceImpl;
 
-import reactor.core.publisher.Mono;
-
 @Configuration
 public class SecurityConfig {
     
@@ -30,17 +28,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authManager,JwtFilter jwtFilter) {
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, 
+                                                         ReactiveAuthenticationManager authManager, 
+                                                         JwtFilter jwtFilter) {
         return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance()) 
+                .csrf(ServerHttpSecurity.CsrfSpec::disable) // Desactiva CSRF
+                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance()) // No guarda contexto de seguridad
+                .authenticationManager(authManager) // Usa el AuthenticationManager proporcionado
                 .authorizeExchange(auth -> {
-                    auth.pathMatchers(HttpMethod.POST,"/auth/login").permitAll();
-                    auth.pathMatchers(HttpMethod.POST,"/auth/register").hasRole("ADMIN"); //Authority("ADMIN"); // Solo ADMIN puede acceder
-                    auth.anyExchange().authenticated(); // Requiere autenticación para cualquier otra ruta
+
+                    // 🔥 Permitir acceso libre a Actuator
+                    auth.pathMatchers("/actuator/info", "/actuator/health").permitAll();
+
+
+                    // Permitir acceso público a login y register
+                    auth.pathMatchers(HttpMethod.POST, "/auth/login").permitAll();
+                    // auth.pathMatchers(HttpMethod.POST, "/api/seguridad/auth/login").permitAll();
+
+                    auth.pathMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN");
+                    // auth.pathMatchers(HttpMethod.POST, "/api/seguridad/auth/register").hasRole("ADMIN");
+
+                    // Todas las demás rutas requieren autenticación
+                    auth.anyExchange().authenticated();
                 })
-                .authenticationManager(authentication -> Mono.empty()) // Desactiva autenticación predeterminada
-                .addFilterBefore(jwtFilter, SecurityWebFiltersOrder.AUTHORIZATION) // Agregar el filtro JWT
+                .addFilterBefore(jwtFilter, SecurityWebFiltersOrder.AUTHORIZATION) // Agregar filtro JWT
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable) // 🔥 Deshabilita autenticación básica
                 .build();
     }
 
@@ -51,37 +63,6 @@ public class SecurityConfig {
         authenticationManager.setPasswordEncoder(passwordEncoder()); // Aquí se inyecta el encoder
         return authenticationManager;
     }
-
-    // private final JwtFilter jwtFilter;
-    // private final MyReactiveUserDetailsService userDetailsService;
-
-    // public SecurityConfig(JwtFilter jwtFilter,  userDetailsService) {
-    //     this.jwtFilter = jwtFilter;
-    //     this.userDetailsService = userDetailsService;
-    // }
-
-    // @Bean
-    // public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-    //     return http
-    //             .csrf(ServerHttpSecurity.CsrfSpec::disable)
-    //             .authorizeExchange(auth -> auth
-    //                     .pathMatchers("/auth/login").permitAll()
-    //                     .anyExchange().authenticated()
-    //             )
-    //             .authenticationManager(reactiveAuthenticationManager(userDetailsService))
-    //             .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-    //             .build();
-    // }
-
-
-    // @Bean
-    // public ReactiveAuthenticationManager reactiveAuthenticationManager(MyReactiveUserDetailsService userDetailsService) {
-    //     UserDetailsRepositoryReactiveAuthenticationManager authenticationManager =
-    //             new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
-    //     authenticationManager.setPasswordEncoder(passwordEncoder()); // Aquí se inyecta el encoder
-    //     return authenticationManager;
-    // }
-
 
 
 }

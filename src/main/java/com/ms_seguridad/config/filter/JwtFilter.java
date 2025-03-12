@@ -36,7 +36,7 @@ public class JwtFilter implements WebFilter {
     @Override
     public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange,@NonNull WebFilterChain chain) {
 
-        System.err.println(exchange.getRequest().getPath());
+        // System.err.println(exchange.getRequest().getPath());
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);    
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);

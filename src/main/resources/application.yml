@@ -1,35 +1,41 @@
 spring:
     application:
-        name: ms-seguridad
+        name: msvc-course
+    config:
+        import: optional:configserver:http://localhost:8888       
 
-dev:
-    hibernate:
-        hbm2ddl:
-          auto: none
-    # dialect: org.hibernate.dialect.SQLServerDialect
-    datasource:
-        username: root
-        password: root
-        databaseName: securityDb
-        host: 192.168.18.166
-        port: 3306
-        jdbc-url: r2dbc:mysql://192.168.18.166:3306/securityDb
-        url: r2dbc:mysql://192.168.18.166:3306/securityDb
-        driverClassName: com.mysql.jdbc.Driver
-        testWhileIdle: true
-        timeBetweenEvictionRunsMillis: 60000
-        validationQuery: SELECT 1
-        initialSize: 10
-        minIdle: 10
-        maxActive: 5
-        maxIdle: 10
-        maximumPoolSize: 10
-        idleTimeout: 30000
-        minimumIdle: 2
+# spring:
+#     application:
+#         name: ms-seguridad
 
-security:
-    jwt:
-        key:
-            private: ad434ed313bc0f7e45d15d06b352c4a3f9a972e96502a578b1ecadc023ac8902
-        user:
-            generator: AUTHOJWT-BACKEND
+# dev:
+#     hibernate:
+#         hbm2ddl:
+#           auto: none
+#     # dialect: org.hibernate.dialect.SQLServerDialect
+#     datasource:
+#         username: root
+#         password: root
+#         databaseName: securityDb
+#         host: 192.168.18.166
+#         port: 3306
+#         jdbc-url: r2dbc:mysql://192.168.18.166:3306/securityDb
+#         url: r2dbc:mysql://192.168.18.166:3306/securityDb
+#         driverClassName: com.mysql.jdbc.Driver
+#         testWhileIdle: true
+#         timeBetweenEvictionRunsMillis: 60000
+#         validationQuery: SELECT 1
+#         initialSize: 10
+#         minIdle: 10
+#         maxActive: 5
+#         maxIdle: 10
+#         maximumPoolSize: 10
+#         idleTimeout: 30000
+#         minimumIdle: 2
+
+# security:
+#     jwt:
+#         key:
+#             private: ad434ed313bc0f7e45d15d06b352c4a3f9a972e96502a578b1ecadc023ac8902
+#         user:
+#             generator: AUTHOJWT-BACKEND

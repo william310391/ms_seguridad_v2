@@ -1,0 +1,14 @@
+spring:
+    application:
+        name: ms-seguridad
+    profiles:
+        active: local
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        health:
+            show-details: always
