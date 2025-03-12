@@ -40,6 +40,8 @@ public class SecurityConfig {
                     // 🔥 Permitir acceso libre a Actuator
                     auth.pathMatchers("/actuator/**").permitAll();
 
+                    // 🔥 Permitir acceso libre a swagger
+                    auth.pathMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml", "/webjars/**","/favicon.ico").permitAll();
 
                     // Permitir acceso público a login y register
                     auth.pathMatchers(HttpMethod.POST, "/auth/login").permitAll();
@@ -47,6 +49,9 @@ public class SecurityConfig {
 
                     auth.pathMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN");
                     // auth.pathMatchers(HttpMethod.POST, "/api/seguridad/auth/register").hasRole("ADMIN");
+
+
+
 
                     // Todas las demás rutas requieren autenticación
                     auth.anyExchange().authenticated();
