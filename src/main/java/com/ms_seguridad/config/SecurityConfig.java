@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeExchange(auth -> {
 
                     // 🔥 Permitir acceso libre a Actuator
-                    auth.pathMatchers("/actuator/info", "/actuator/health").permitAll();
+                    auth.pathMatchers("/actuator/**").permitAll();
 
 
                     // Permitir acceso público a login y register
